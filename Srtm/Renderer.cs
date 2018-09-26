@@ -82,29 +82,50 @@ namespace Srtm
 
         private Color GetBackgroundColor(HeightMap heightMap, RenderingInfo rendering, int x, int y)
         {
-            int scaledX = (int)(x * heightMap.Columns / rendering.Width);
-            int scaledY = (int)(y * heightMap.Rows / rendering.Height);
+            var (i, j) = ToIndex(heightMap, rendering, x, y);
 
-            return colors[heightMap.Values[scaledX, scaledY]];
+            return colors[heightMap.Values[i, j]];
+        }
+
+        private static RenderingInfo renderingToBeLogged;
+        private static (int i, int j) ToIndex(HeightMap heightMap, RenderingInfo rendering, int x, int y)
+        {
+            // y runs top-down (i.e. 0,0 is upper-left, not lower-left), so adjust:
+            y = rendering.Height - y;
+
+            var lon = rendering.MinLongitude + (x * (rendering.MaxLongitude - rendering.MinLongitude)) / rendering.Width;
+            var lat = rendering.MaxLatitude + (y * (rendering.MaxLatitude - rendering.MinLatitude)) / rendering.Height;
+
+            var i = (int)((lon - heightMap.LowerLeftX) / (heightMap.UpperRightX - heightMap.LowerLeftX) * heightMap.Columns);
+            var j = (int)((lat - heightMap.LowerLeftY) / (heightMap.UpperRightY - heightMap.LowerLeftY) * heightMap.Rows);
+
+            j = heightMap.Rows - j;
+
+            if (renderingToBeLogged == null)
+                renderingToBeLogged = rendering;
+
+            if (renderingToBeLogged == rendering && x == 100 && y % 50 == 0)
+                Console.WriteLine($"y = {rendering.Height - y}, lat = {lat:0.000}, j = {j}");
+
+            return (i, j);
         }
 
         private Color GetReliefShadingColor(HeightMap heightMap, RenderingInfo rendering, int x, int y)
         {
-            int scaledX = (int)(x * heightMap.Columns / rendering.Width);
-            int scaledY = (int)(y * heightMap.Rows / rendering.Height);
+            var (i, j) = ToIndex(heightMap, rendering, x, y);
 
             int v, a;
             int diff = 0;
 
-            if (scaledX - 2 > 0)
+            if (i - 2 > 0)
             {
-                diff += (2 * heightMap.Values[scaledX, scaledY] - heightMap.Values[scaledX - 1, scaledY] +
-                         1 * heightMap.Values[scaledX, scaledY] - heightMap.Values[scaledX - 2, scaledY]);
+                diff += (2 * heightMap.Values[i, j] - heightMap.Values[i - 1, j] +
+                         1 * heightMap.Values[i, j] - heightMap.Values[i - 2, j]);
             }
-            if (scaledY + 2 < heightMap.Rows - 1)
+            if (j + 2 < heightMap.Rows - 1)
             {
-                diff -= (2 * heightMap.Values[scaledX, scaledY] - heightMap.Values[scaledX, scaledY + 1] +
-                         1 * heightMap.Values[scaledX, scaledY] - heightMap.Values[scaledX, scaledY + 2]);
+                diff -= (2 * heightMap.Values[i, j] - heightMap.Values[i, j + 1] +
+                         1 * heightMap.Values[i, j] - heightMap.Values[i, j + 2]);
             }
 
             diff = (int)(diff ^ 3 / 4);
@@ -113,7 +134,7 @@ namespace Srtm
 
             // Nur schwarz-weiß:
 
-            v = (int)(heightMap.Normalized[scaledX, scaledY] * 2.3 * (100 + diff)) * 0 + diff + 64;
+            v = (int)(heightMap.Normalized[i, j] * 2.3 * (100 + diff)) * 0 + diff + 64;
             a = 255;
             if (v < 0) { v = 0; } else if (v > 255) { v = 255; }
             if (a < 0) { a = 0; } else if (a > 255) { a = 255; }

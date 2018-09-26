@@ -37,9 +37,6 @@ namespace SrtmMapLayer
 
             this._widthInDegrees  = UpperRight.Longitude - LowerLeft.Longitude;
             this._heightInDegrees = UpperRight.Latitude  - LowerLeft.Latitude;
-
-            Console.WriteLine("Tile point for max latitude is " + LocationToTilePoint(this.UpperRight).Y);
-            Console.WriteLine("Tile point for min latitude is " + LocationToTilePoint(this.LowerLeft).Y);
         }
 
         public Location LowerLeft  { get; private set; }
