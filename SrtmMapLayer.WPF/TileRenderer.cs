@@ -1,4 +1,5 @@
-﻿using SrtmMapLayer.Colors;
+﻿using Srtm;
+using Srtm.Colors;
 using System;
 using System.IO;
 using System.Windows;

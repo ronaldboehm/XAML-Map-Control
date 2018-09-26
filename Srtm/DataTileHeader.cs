@@ -1,4 +1,4 @@
-﻿namespace SrtmMapLayer
+﻿namespace Srtm
 {
     public class DataTileHeader
     {

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 
-namespace SrtmMapLayer
+namespace Srtm
 {
     /// <summary>
     /// Reads heightmap data from a file in ArcInfo ASCII Grid format.
@@ -326,7 +326,7 @@ namespace SrtmMapLayer
         }
         #endregion
 
-        internal DataTileHeader ReadHeader(string filename)
+        public DataTileHeader ReadHeader(string filename)
         {
             using (FileStream stream = new FileStream(filename, FileMode.Open))
             {

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace SrtmMapLayer.Colors
+namespace Srtm.Colors
 {
     public interface IElevationColors
     {

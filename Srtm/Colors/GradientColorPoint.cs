@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace SrtmMapLayer.Colors
+namespace Srtm.Colors
 {
     public class GradientColorPoint
     {

@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace SrtmMapLayer.Colors
+namespace Srtm.Colors
 {
     public class ElevationColors : IElevationColors
     {

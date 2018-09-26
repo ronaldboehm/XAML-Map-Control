@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SrtmMapLayer
+namespace Srtm
 {
     /// <summary>
     /// Contains the heightmap data read from an ArcInfo ASCII file.
