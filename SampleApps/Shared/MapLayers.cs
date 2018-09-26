@@ -20,6 +20,10 @@ namespace ViewModel
         private readonly Dictionary<string, UIElement> mapLayers = new Dictionary<string, UIElement>
         {
             {
+                "Example for a custom tile layer (using SRTM data)",
+                new SrtmMapLayer.MapLayer()
+            },
+            {
                 "OpenStreetMap",
                 MapTileLayer.OpenStreetMapTileLayer
             },
@@ -149,6 +153,7 @@ namespace ViewModel
 
         public List<string> MapLayerNames { get; } = new List<string>
         {
+            "Example for a custom tile layer (using SRTM data)",
             "OpenStreetMap",
             "OpenStreetMap German",
             "Stamen Terrain",
