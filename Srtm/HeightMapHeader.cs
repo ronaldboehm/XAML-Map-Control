@@ -1,6 +1,6 @@
 ﻿namespace Srtm
 {
-    public class DataTileHeader
+    public class HeightMapHeader
     {
         public string Filename { get; set; }
 

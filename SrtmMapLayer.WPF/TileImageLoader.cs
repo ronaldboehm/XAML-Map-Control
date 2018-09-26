@@ -9,7 +9,7 @@ namespace SrtmMapLayer
     public class TileImageLoader : ITileImageLoader
     {
         private readonly ConcurrentStack<Tile> pendingTiles = new ConcurrentStack<Tile>();
-        private readonly DataTileProvider srtmTileProvider = new DataTileProvider("E:\\Temp");
+        private readonly HeightMapProvider srtmTileProvider = new HeightMapProvider("E:\\Temp");
         private readonly TileRenderer renderer = new TileRenderer();
 
         public TileImageLoader()

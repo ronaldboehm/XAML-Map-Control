@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace SrtmMapLayer
 {
-    public class DataTileProvider
+    public class HeightMapProvider
     {
         private string dataDirectory;
 
         private ArcAsciiGridFileReader reader = new ArcAsciiGridFileReader();
-        private List<DataTileHeader> headers = new List<DataTileHeader>();
-        private List<DataTile> dataTiles = new List<DataTile>();
+        private List<HeightMapHeader> headers = new List<HeightMapHeader>();
+        private List<HeightMap> heightMaps = new List<HeightMap>();
 
-        public DataTileProvider(string dataDirectory)
+        public HeightMapProvider(string dataDirectory)
         {
             this.dataDirectory = dataDirectory;
 
@@ -34,19 +34,18 @@ namespace SrtmMapLayer
             });
         }
 
-
-        internal DataTileHeader HeaderForTile(Location lowerLeft, Location upperRight)
+        internal HeightMapHeader HeaderForTile(Location lowerLeft, Location upperRight)
         {
             return headers.FirstOrDefault(h => h.Contains(lowerLeft.Longitude, lowerLeft.Latitude) && h.Contains(upperRight.Longitude, upperRight.Latitude));
         }
 
-        internal DataTile Get(Location lowerLeft, Location upperRight)
+        internal HeightMap Get(Location lowerLeft, Location upperRight)
         {
             // already in memory? 
-            var result = dataTiles.FirstOrDefault(tile => tile.Contains(lowerLeft.Longitude, lowerLeft.Latitude) && tile.Contains(upperRight.Longitude, upperRight.Latitude));
+            var heightMap = heightMaps.FirstOrDefault(tile => tile.Contains(lowerLeft.Longitude, lowerLeft.Latitude) && tile.Contains(upperRight.Longitude, upperRight.Latitude));
             // then take that one:
-            if (result != null)
-                return result;
+            if (heightMap != null)
+                return heightMap;
 
             // not in memory, but in the directory?
             var header = headers.FirstOrDefault(tile => tile.Contains(lowerLeft.Longitude, lowerLeft.Latitude) && tile.Contains(upperRight.Longitude, upperRight.Latitude));
@@ -54,22 +53,22 @@ namespace SrtmMapLayer
                 return null;
 
             // then read it now...
-            ReadTile(header.Filename);
+            ReadFromFile(header.Filename);
 
             // ... and return it:
-            return dataTiles.FirstOrDefault(tile => tile.Contains(lowerLeft.Longitude, lowerLeft.Latitude) && tile.Contains(upperRight.Longitude, upperRight.Latitude));
+            return heightMaps.FirstOrDefault(tile => tile.Contains(lowerLeft.Longitude, lowerLeft.Latitude) && tile.Contains(upperRight.Longitude, upperRight.Latitude));
         }
 
         private object lockObject = new Object();
-        private void ReadTile(string filename)
+        private void ReadFromFile(string filename)
         {
             lock (lockObject)
             {
                 // ignore multiple requests for the same tile:
-                if (dataTiles.Any(tile => tile.Filename.Equals(filename)))
+                if (heightMaps.Any(tile => tile.Filename.Equals(filename)))
                     return;
 
-                dataTiles.Add(reader.ReadTile(filename));
+                heightMaps.Add(reader.ReadHeightMap(filename));
             }
         }
     }

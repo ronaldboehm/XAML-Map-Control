@@ -66,17 +66,6 @@ namespace SrtmMapLayer
         }
 
         // based on http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#C.23
-        //private static PointF TileToWorldPos(double tile_x, double tile_y, int zoom)
-        //{
-        //    var p = new PointF();
-        //    double n = Math.PI - ((2.0 * Math.PI * tile_y) / Math.Pow(2.0, zoom));
-
-        //    p.X = (float)((tile_x / Math.Pow(2.0, zoom) * 360.0) - 180.0);
-        //    p.Y = (float)(180.0 / Math.PI * Math.Atan(Math.Sinh(n)));
-
-        //    return p;
-        //}
-
         private static Location TileToWorldLocation(double tile_x, double tile_y, int zoom)
         {
             var location = new Location();

@@ -6,9 +6,9 @@ namespace Srtm
     /// Contains the heightmap data read from an ArcInfo ASCII file.
     /// </summary>
     [Serializable]
-    public class DataTile
+    public class HeightMap
     {
-        public DataTile(int columns, int rows)
+        public HeightMap(int columns, int rows)
         {
             Columns = columns;
             Rows    = rows;
@@ -65,13 +65,13 @@ namespace Srtm
         private NormalizedValues normalized;
         public class NormalizedValues
         {
-            private DataTile tile;
+            private HeightMap heightMap;
             private double normalizeFactor;
 
-            internal NormalizedValues(DataTile tile)
+            internal NormalizedValues(HeightMap heightMap)
             {
-                this.tile = tile;
-                normalizeFactor = 1.0f / tile.Max;
+                this.heightMap = heightMap;
+                normalizeFactor = 1.0f / heightMap.Max;
             }
 
             /// <summary>
@@ -82,7 +82,7 @@ namespace Srtm
             {
                 get
                 {
-                    return normalizeFactor * tile.Values[x, y];
+                    return normalizeFactor * heightMap.Values[x, y];
                 }
 
             }

@@ -86,28 +86,28 @@ namespace Srtm
         #endregion
 
         #region ReadTile
-        public DataTile ReadTile(string filename)
+        public HeightMap ReadHeightMap(string filename)
         {
-            DataTile tile;
+            HeightMap heightMap;
 
             using (FileStream stream = new FileStream(filename, FileMode.Open))
             {
                 using (StreamReader reader = new StreamReader(stream))
                 {
-                    tile = CreateTileFromHeader(reader);
-                    tile.Filename = filename;
+                    heightMap = CreateHeightMapFromHeader(reader);
+                    heightMap.Filename = filename;
 
-                    ValueReaderBase valueReader = new FastValueReader(tile, reader, ReportProgress);
+                    ValueReaderBase valueReader = new FastValueReader(heightMap, reader, ReportProgress);
                     valueReader.Read();
                 }
             }
 
-            return tile;
+            return heightMap;
         }
         #endregion
 
         #region Reader helpers
-        private DataTile CreateTileFromHeader(StreamReader reader)
+        private HeightMap CreateHeightMapFromHeader(StreamReader reader)
         {
             // ncols 157
             // nrows 171
@@ -117,20 +117,20 @@ namespace Srtm
             Int16 columns = ReadInt16("ncols", reader.ReadLine());
             Int16 rows = ReadInt16("nrows", reader.ReadLine());
 
-            return new DataTile(columns, rows)
+            return new HeightMap(columns, rows)
             {
-                LowerLeftX = ReadFloat("xllcorner", reader.ReadLine()),
-                LowerLeftY = ReadFloat("yllcorner", reader.ReadLine()),
-                CellSize = ReadFloat("cellsize", reader.ReadLine()),
-                NoDataValue = ReadInt16("NODATA_value", reader.ReadLine())
+                LowerLeftX  = ReadFloat("xllcorner",    reader.ReadLine()),
+                LowerLeftY  = ReadFloat("yllcorner",    reader.ReadLine()),
+                CellSize    = ReadFloat("cellsize",     reader.ReadLine()),
+                NoDataValue = ReadInt16("NODATA_value", reader.ReadLine()),
             };
         }
 
-        private DataTileHeader CreateHeader(StreamReader reader)
+        private HeightMapHeader CreateHeader(StreamReader reader)
         {
             // skip columns/rows information:
 
-            return new DataTileHeader()
+            return new HeightMapHeader()
             {
                 Columns = ReadInt16("ncols", reader.ReadLine()),
                 Rows = ReadInt16("nrows", reader.ReadLine()),
@@ -170,32 +170,28 @@ namespace Srtm
         #region ValueReader
         private abstract class ValueReaderBase
         {
-            protected DataTile tile;
+            protected HeightMap heightMap;
             protected StreamReader reader;
             protected int column;
             protected int row;
             protected ProgressDelegate progress;
 
-            internal ValueReaderBase(DataTile tile, StreamReader reader, ProgressDelegate progress)
+            internal ValueReaderBase(HeightMap heightMap, StreamReader reader, ProgressDelegate progress)
             {
-                this.tile = tile;
-                this.reader = reader;
-                this.progress = progress;
+                this.heightMap = heightMap;
+                this.reader    = reader;
+                this.progress  = progress;
 
                 column = 0;
-                row = 0;
+                row    = 0;
             }
 
             internal protected abstract void Read();
 
-            // Using an index and calculating the column/row from the index is too slow:
-            //private int CurrentColumn { get { return index % tile.Columns; } }
-            //private int CurrentRow { get { return index / tile.Columns; } }
-
             protected void AdvanceColumn()
             {
                 column++;
-                if (column >= tile.Columns)
+                if (column >= heightMap.Columns)
                 {
                     column = 0;
                     row++;
@@ -209,7 +205,7 @@ namespace Srtm
         /// </remarks>
         private class SimpleValueReader : ValueReaderBase
         {
-            internal SimpleValueReader(DataTile tile, StreamReader reader, ProgressDelegate progress) :
+            internal SimpleValueReader(HeightMap tile, StreamReader reader, ProgressDelegate progress) :
                 base(tile, reader, progress)
             { }
 
@@ -218,17 +214,17 @@ namespace Srtm
                 while (!reader.EndOfStream)
                 {
                     ReadValuesFromLine(reader.ReadLine());
-                    progress(row, tile.Rows);
+                    progress(row, heightMap.Rows);
                 }
 
-                progress(tile.Rows, tile.Rows);
+                progress(heightMap.Rows, heightMap.Rows);
             }
 
             private void ReadValuesFromLine(string line)
             {
                 foreach (string s in line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    tile.Values[column, row] = Convert.ToInt16(s);
+                    heightMap.Values[column, row] = Convert.ToInt16(s);
                     AdvanceColumn();
                 }
             }
@@ -258,7 +254,7 @@ namespace Srtm
             private const int bufferSize = 10000;
             private char[] buffer;
 
-            internal FastValueReader(DataTile tile, StreamReader reader, ProgressDelegate progress) :
+            internal FastValueReader(HeightMap tile, StreamReader reader, ProgressDelegate progress) :
                 base(tile, reader, progress)
             {
                 buffer = new char[bufferSize];
@@ -281,7 +277,7 @@ namespace Srtm
                         max = ReadIntoBuffer();
                         index = 0;
 
-                        progress(row, tile.Rows);
+                        progress(row, heightMap.Rows);
                     }
 
                     if (buffer[index] == ' ' || buffer[index] == (char)13)
@@ -294,7 +290,7 @@ namespace Srtm
                             }
 
                             //parent.AddValue(currentValue);
-                            tile.Values[column, row] = (short)currentValue;
+                            heightMap.Values[column, row] = (short)currentValue;
                             AdvanceColumn();
 
                             negative = false;
@@ -326,7 +322,7 @@ namespace Srtm
         }
         #endregion
 
-        public DataTileHeader ReadHeader(string filename)
+        public HeightMapHeader ReadHeader(string filename)
         {
             using (FileStream stream = new FileStream(filename, FileMode.Open))
             {

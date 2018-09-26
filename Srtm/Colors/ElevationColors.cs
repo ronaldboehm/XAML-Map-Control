@@ -16,7 +16,8 @@ namespace Srtm.Colors
         public static readonly Gradient SimpleGradient = Gradient.GetSimpleGradient();
         public static readonly Gradient NaturalGradient = Gradient.GetNaturalGradient();
         public static readonly Gradient NaturalDarkGradient = Gradient.GetNaturalDarkGradient();
-        public static Gradient DefaultGradient { get { return NaturalGradient; } }
+
+        public static Gradient DefaultGradient => NaturalDarkGradient;
 
         public class Gradient
         {
@@ -90,7 +91,10 @@ namespace Srtm.Colors
         }
         #endregion
 
-        public ElevationColors() : this(ElevationColors.DefaultGradient) { }
+        public ElevationColors() : 
+            this(ElevationColors.DefaultGradient)
+        {
+        }
 
         public ElevationColors(Gradient gradient)
         {
