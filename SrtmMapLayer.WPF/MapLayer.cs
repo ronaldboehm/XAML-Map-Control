@@ -17,7 +17,7 @@ namespace SrtmMapLayer
             TileSource = new TileSource();
         }
 
-        // when using MapImageLayer as the base class, only override GetImageAsync():
+        // when using MapImageLayer (instead of MapTileLayer) as the base class, only override GetImageAsync():
         //
         //private readonly DataTileProvider srtmTileProvider = new DataTileProvider("E:\\Temp");
         //private readonly TileRenderer renderer = new TileRenderer();

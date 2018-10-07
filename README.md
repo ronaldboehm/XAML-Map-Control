@@ -1,56 +1,45 @@
-# XAML Map Control
+# Map with SRTM elevation data
 
-A set of controls for WPF and UWP for rendering digital maps from different providers and various types of map overlays.
+Based on [Clemens Fischer](https://github.com/ClemensFischer)'s [XAML Map Control](https://github.com/ClemensFischer/XAML-Map-Control), 
+this demo app shows how to add a map layer that renders custom tiles.
+These custom tiles are based on [SRTM 90m Digital Elevation Data](https://cgiarcsi.community/data/srtm-90m-digital-elevation-database-v4-1/).
 
-Map providers can easily be added by specifying an URL template for their map tile bitmaps. 
-Map overlay layers allow to draw and interact with graphical objects and pushpins on the map.
-The Map Control API is similar to the Microsoft Bing Maps Control for WPF, except that no API key is needed.
+![Skye](img/Skye.png)
 
-The project includes sample applications for both platforms, which demonstrate the features of XAML Map Control.
+## Adding a custom map tile layer
 
-Map Control supports multiple map projections. However, the MapTileLayer class only works with WebMercatorProjection.
-For other projections, an appropriate WmsImageLayer could be used.
+To create a custom map tile layer:
 
----
+* Add a new class derived from MapTileLayer with a custom TileImageLoader
 
-Main classes are
+        public class MapLayer : MapTileLayer
+        {
+            public MapLayer()
+                : base(new TileImageLoader())
+            {
+                SourceName   = "SRTM Tiles";
+                Description  = "SRTM Data";
+                MinZoomLevel = 8;
+                MaxZoomLevel = 18;
 
-- **MapBase**: The core map control. Provides properties like Center, ZoomLevel and Heading, which
-define the currently displayed map viewport.
+                // dummy to satisfy condition in MapTileLayer.UpdateTiles()
+                TileSource = new TileSource();
+            }
+        }
 
-- **Map**: MapBase with basic mouse and touch input handling for zoom, pan, and rotation.
+* In the [TileImageLoader](SrtmMapLayer.WPF/TileImageLoader.cs), implmenent ITileImageLoader.LoadTilesAsync()
 
-- **MapTileLayer**: Provides tiled map content (e.g. from OpenStreetMap) by means of a **TileSource**.
+Actual rendering happens in [Renderer.cs](Srtm/Renderer.cs) where the [elevation data](https://en.wikipedia.org/wiki/Digital_elevation_model)
+is read from the [corresponding SRTM data tile](http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp) and converted to a relief map.
 
-- **MapImageLayer**: Provides map content that covers the entire viewport (e.g. from a Web Map Service).
+## Known issues/bugs
 
-- **MapItemsControl**: Displays a collection of **MapItem** objects (with a geographic **Location**).
+This is more of a proof-of-concept for integrating other data sources with the XAML Map Control than a usable project and is not complete. 
 
----
+Known problems/issues/limitations include:
 
-The WPF version allows to use a System.Runtime.Caching.ObjectCache instance for caching map tile bitmaps.
-The cache may be set to an instance of System.Runtime.Caching.MemoryCache (e.g. MemoryCache.Default),
-but caching can also be done persistently by some specialized ObjectCache implementation.
-Map Control comes with two such implementations:
-* ImageFileCache, an ObjectCache implementation that stores each cached map tile as a single image file,
-in the original file format delivered by the map provider (typically PNG or JPG). ImageFileCache is part of
-the MapControl.WPF library. It does not support expiration, which means that cached tile image files will
-not be deleted automatically. The cache may hence consume a considerable amount of disk space.
-* FileDbCache, an ObjectCache implementation based on EzTools FileDb, a simple, file based No-SQL database,
-in a separate library FileDbCache.WPF.
-
-If you want to try the sample application with persistent caching, uncomment the appropriate TileImageLoader.Cache
-setting in the sample application's MainWindow.xaml.cs file. Please note that some map providers may not allow
-persistent caching of their map data.
-
-For UWP, the cache functionality is defined by the interface IImageCache in the namespace MapControl.Caching,
-and implemented by the classes ImageFileCache and FileDbCache (in library FileDbCache.UWP). Local image files
-are written to the  ApplicationData.Current.TemporaryFolder by default.
-
----
-
-XAML Map Control is available on NuGet, with Package Id [XAML.MapControl](https://www.nuget.org/packages/XAML.MapControl/).
-
----
-
-The project is not open for contributions. Pull requests will not be accepted.
+* SRTM data tiles are expected to be saved to directory E:\Temp (set in [TileImageLoader.cs](SrtmMapLayer.WPF/TileImageLoader.cs))
+* missing SRTM data tiles (which would be available at (http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp)) are not downloaded automatically, only those already in the download directory are used 
+* only map tiles that are within one SRTM data tile are rendered (in other words, those spanning two or more SRTM data tiles are not rendered)
+* the calculation of coordinates based on the map tile to be displayed is incorrect
+* ...

@@ -132,14 +132,11 @@ namespace Srtm
             if (diff < 1 && diff > -1) diff = 0;
             diff = ((int)Math.Sqrt(Math.Abs(diff))) * Math.Sign(diff) * 4;
 
-            // Nur schwarz-weiß:
-
             v = (int)(heightMap.Normalized[i, j] * 2.3 * (100 + diff)) * 0 + diff + 64;
             a = 255;
             if (v < 0) { v = 0; } else if (v > 255) { v = 255; }
             if (a < 0) { a = 0; } else if (a > 255) { a = 255; }
 
-            // Als Hintergrund:
             //v = (int)(data.Normalized[scaledX, scaledY] * 0.7 * (100 + diff)) + 3 * diff + 16;
             //if (v < 0) { v = 0; } else if (v > 255) { v = 255; }
             //a = 64 + Math.Abs(v - 128) / 4;
