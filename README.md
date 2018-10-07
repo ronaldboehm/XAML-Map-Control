@@ -27,7 +27,7 @@ To create a custom map tile layer:
             }
         }
 
-* In the [TileImageLoader](SrtmMapLayer.WPF/TileImageLoader.cs), implmenent ITileImageLoader.LoadTilesAsync()
+* In the [TileImageLoader](SrtmMapLayer.WPF/TileImageLoader.cs), implement ITileImageLoader.LoadTilesAsync()
 
 Actual rendering happens in [Renderer.cs](Srtm/Renderer.cs) where the [elevation data](https://en.wikipedia.org/wiki/Digital_elevation_model)
 is read from the [corresponding SRTM data tile](http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp) and converted to a relief map.
@@ -39,7 +39,8 @@ This is more of a proof-of-concept for integrating other data sources with the X
 Known problems/issues/limitations include:
 
 * SRTM data tiles are expected to be saved to directory E:\Temp (set in [TileImageLoader.cs](SrtmMapLayer.WPF/TileImageLoader.cs))
-* missing SRTM data tiles (which would be available at (http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp)) are not downloaded automatically, only those already in the download directory are used 
+* missing SRTM data tiles (which would be available at http://srtm.csi.cgiar.org/SELECTION/inputCoord.asp) are not downloaded automatically, only those already in the download directory are used 
 * only map tiles that are within one SRTM data tile are rendered (in other words, those spanning two or more SRTM data tiles are not rendered)
 * the calculation of coordinates based on the map tile to be displayed is incorrect
+* This only works for the WPF application, the UWP code has not been updated
 * ...
