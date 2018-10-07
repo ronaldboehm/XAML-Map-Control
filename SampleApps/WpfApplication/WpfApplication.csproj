@@ -85,6 +85,10 @@
       <Project>{a204a102-c745-4d65-aec8-7b96faedef2d}</Project>
       <Name>MapControl.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Srtm.Controls\Srtm.Controls.csproj">
+      <Project>{0783b07a-9e7c-4ec2-9b83-ffd5981e0b07}</Project>
+      <Name>Srtm.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SrtmMapLayer.WPF\SrtmMapLayer.WPF.csproj">
       <Project>{32b60a41-7bd1-4626-84b0-367e64fda66c}</Project>
       <Name>SrtmMapLayer.WPF</Name>

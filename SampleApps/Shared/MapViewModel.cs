@@ -46,7 +46,7 @@ namespace ViewModel
 
     public class MapViewModel : ViewModelBase
     {
-        private Location mapCenter = new Location(53.5, 8.2);
+        private Location mapCenter = new Location(57.4, -6.2);
         public Location MapCenter
         {
             get { return mapCenter; }

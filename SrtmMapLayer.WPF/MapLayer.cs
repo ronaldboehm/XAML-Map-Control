@@ -10,7 +10,7 @@ namespace SrtmMapLayer
         {
             SourceName   = "SRTM Tiles";
             Description  = "SRTM Data";
-            MinZoomLevel = 10;
+            MinZoomLevel = 8;
             MaxZoomLevel = 18;
 
             // dummy to satisfy condition in MapTileLayer.UpdateTiles()

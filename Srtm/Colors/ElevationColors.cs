@@ -174,7 +174,9 @@ namespace Srtm.Colors
             context.DrawRectangle(brush, null, new Rect(0, 0, gradientBitmap.Width, gradientBitmap.Height));
             context.Close();
 
+            gradientBitmap = new RenderTargetBitmap(1000, 3, 96, 96, PixelFormats.Default);
             gradientBitmap.Render(drawing);
+            gradientBitmap.Freeze();
         }
         #endregion
 
@@ -192,7 +194,7 @@ namespace Srtm.Colors
             if (!isUpdating) DrawGradientBitmap();
         }
 
-        internal void SortByOffset()
+        public void SortByOffset()
         {
             points.SortByOffset();
 

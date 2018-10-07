@@ -1,0 +1,1 @@
+﻿This project contains the ElevationColorsPicker control for WPF, but still has a reference to System.Drawing for the ColorDialog.

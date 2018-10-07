@@ -5,6 +5,7 @@
     xmlns:map="clr-namespace:MapControl;assembly=MapControl.WPF"
     xmlns:vm="clr-namespace:ViewModel"
     xmlns:local="clr-namespace:WpfApplication"
+    xmlns:srtm="clr-namespace:Srtm.Controls;assembly=Srtm.Controls"
     Title="XAML MapControl - WPF Test Application" Height="600" Width="800"
     Stylus.IsPressAndHoldEnabled="False">
     <Window.Resources>
@@ -120,11 +121,19 @@
     </Window.DataContext>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <map:Map x:Name="map" ZoomLevel="11" MaxZoomLevel="20"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100" />
+        </Grid.ColumnDefinitions>
+
+        <srtm:ElevationColorsPicker Grid.Column="1" />
+        
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <map:Map x:Name="map" ZoomLevel="10" MaxZoomLevel="20"
                  Center="{Binding MapCenter}"
                  MapLayer="{Binding MapLayers.CurrentMapLayer}"
                  MapProjection="{Binding SelectedValue, ElementName=projectionComboBox,
@@ -135,91 +144,93 @@
                  MouseMove="MapMouseMove" MouseLeave="MapMouseLeave"
                  ManipulationInertiaStarting="MapManipulationInertiaStarting">
 
-            <Image x:Name="mapImage" Source="10_535_330.jpg" Opacity="0.5" Stretch="Fill"
+                <Image x:Name="mapImage" Source="10_535_330.jpg" Opacity="0.5" Stretch="Fill"
                    map:MapPanel.BoundingBox="53.54031,8.08594,53.74871,8.43750"/>
 
-            <map:MapGraticule x:Name="mapGraticule" Opacity="0.6"/>
-            <map:MapScale HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                <map:MapGraticule x:Name="mapGraticule" Opacity="0.6"/>
+                <map:MapScale HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
-            <!-- use ItemTemplate or ItemContainerStyle alternatively -->
-            <map:MapItemsControl ItemsSource="{Binding Polylines}"
+                <!-- use ItemTemplate or ItemContainerStyle alternatively -->
+                <map:MapItemsControl ItemsSource="{Binding Polylines}"
                                  ItemTemplate="{StaticResource PolylineItemTemplate}"/>
-            <!--<map:MapItemsControl ItemsSource="{Binding Polylines}"
+                <!--<map:MapItemsControl ItemsSource="{Binding Polylines}"
                                  ItemContainerStyle="{StaticResource PolylineItemStyle}"/>-->
 
-            <map:MapItemsControl ItemsSource="{Binding Points}"
+                <map:MapItemsControl ItemsSource="{Binding Points}"
                                  ItemContainerStyle="{StaticResource PointItemStyle}"
                                  IsSynchronizedWithCurrentItem="True"
                                  SelectionMode="Extended"/>
 
-            <map:MapItemsControl ItemsSource="{Binding Pushpins}"
+                <map:MapItemsControl ItemsSource="{Binding Pushpins}"
                                  ItemContainerStyle="{StaticResource PushpinItemStyle}"
                                  IsSynchronizedWithCurrentItem="True"/>
 
-            <map:Pushpin map:MapPanel.Location="65,-18" Content="Iceland"/>
-            <map:Pushpin map:MapPanel.Location="71,25" Content="Norway"/>
-            <map:Pushpin map:MapPanel.Location="35,33" Content="Cyprus"/>
-            <map:Pushpin map:MapPanel.Location="28.25,-16.5" Content="Tenerife"/>
+                <map:Pushpin map:MapPanel.Location="65,-18" Content="Iceland"/>
+                <map:Pushpin map:MapPanel.Location="71,25" Content="Norway"/>
+                <map:Pushpin map:MapPanel.Location="35,33" Content="Cyprus"/>
+                <map:Pushpin map:MapPanel.Location="28.25,-16.5" Content="Tenerife"/>
 
-            <Path map:MapPanel.Location="53.5,8.2" Stroke="Blue" StrokeThickness="3" Fill="#1F007F00">
-                <Path.Data>
-                    <EllipseGeometry RadiusX="1852" RadiusY="1852" Transform="{Binding ScaleRotateTransform, ElementName=map}"/>
-                </Path.Data>
-            </Path>
+                <Path map:MapPanel.Location="53.5,8.2" Stroke="Blue" StrokeThickness="3" Fill="#1F007F00">
+                    <Path.Data>
+                        <EllipseGeometry RadiusX="1852" RadiusY="1852" Transform="{Binding ScaleRotateTransform, ElementName=map}"/>
+                    </Path.Data>
+                </Path>
 
-            <map:Pushpin map:MapPanel.Location="53.5,8.2" Background="Yellow" Foreground="Blue" Content="N 53°30' E 8°12'">
-                <map:Pushpin.Visibility>
-                    <MultiBinding Converter="{StaticResource LocationToVisibilityConverter}">
-                        <Binding Path="(map:MapPanel.ParentMap)" RelativeSource="{RelativeSource Self}"/>
-                        <Binding Path="(map:MapPanel.ViewportPosition)" RelativeSource="{RelativeSource Self}"/>
-                    </MultiBinding>
-                </map:Pushpin.Visibility>
-            </map:Pushpin>
-        </map:Map>
+                <map:Pushpin map:MapPanel.Location="53.5,8.2" Background="Yellow" Foreground="Blue" Content="N 53°30' E 8°12'">
+                    <map:Pushpin.Visibility>
+                        <MultiBinding Converter="{StaticResource LocationToVisibilityConverter}">
+                            <Binding Path="(map:MapPanel.ParentMap)" RelativeSource="{RelativeSource Self}"/>
+                            <Binding Path="(map:MapPanel.ViewportPosition)" RelativeSource="{RelativeSource Self}"/>
+                        </MultiBinding>
+                    </map:Pushpin.Visibility>
+                </map:Pushpin>
+            </map:Map>
 
-        <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#7FFFFFFF">
-            <TextBlock Margin="2" FontSize="10" map:HyperlinkText.InlinesSource="{Binding MapLayer.Description, ElementName=map}"/>
-        </Border>
+            <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#7FFFFFFF">
+                <TextBlock Margin="2" FontSize="10" map:HyperlinkText.InlinesSource="{Binding MapLayer.Description, ElementName=map}"/>
+            </Border>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Name="mouseLocation" Margin="5" VerticalAlignment="Bottom" FontFamily="Segoe UI Mono"/>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                <StackPanel Margin="5">
-                    <TextBlock Text="Zoom Level" Margin="0,0,0,2" HorizontalAlignment="Center" Foreground="Gray" FontSize="10"/>
-                    <Slider ToolTip="Zoom Level" Width="100" VerticalAlignment="Center" SmallChange="0.01"
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="mouseLocation" Margin="5" VerticalAlignment="Bottom" FontFamily="Segoe UI Mono"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <StackPanel Margin="5">
+                        <TextBlock Text="Zoom Level" Margin="0,0,0,2" HorizontalAlignment="Center" Foreground="Gray" FontSize="10"/>
+                        <Slider ToolTip="Zoom Level" Width="100" VerticalAlignment="Center" SmallChange="0.01"
                             Minimum="{Binding MinZoomLevel, ElementName=map}"
                             Maximum="{Binding MaxZoomLevel, ElementName=map}"
                             Value="{Binding TargetZoomLevel, ElementName=map}"/>
-                </StackPanel>
-                <StackPanel Margin="5">
-                    <TextBlock Text="Heading" Margin="0,0,0,2" HorizontalAlignment="Center" Foreground="Gray" FontSize="10"/>
-                    <Slider ToolTip="Heading" Width="100" VerticalAlignment="Center" SmallChange="5" LargeChange="45"
+                    </StackPanel>
+                    <StackPanel Margin="5">
+                        <TextBlock Text="Heading" Margin="0,0,0,2" HorizontalAlignment="Center" Foreground="Gray" FontSize="10"/>
+                        <Slider ToolTip="Heading" Width="100" VerticalAlignment="Center" SmallChange="5" LargeChange="45"
                             Minimum="0" Maximum="360" Value="{Binding TargetHeading, ElementName=map}"/>
-                </StackPanel>
-                <StackPanel Margin="5">
-                    <TextBlock Text="Image Opacity" Margin="0,0,0,2" HorizontalAlignment="Center" Foreground="Gray" FontSize="10"/>
-                    <Slider ToolTip="Image Opacity" Width="100" VerticalAlignment="Center"
+                    </StackPanel>
+                    <StackPanel Margin="5">
+                        <TextBlock Text="Image Opacity" Margin="0,0,0,2" HorizontalAlignment="Center" Foreground="Gray" FontSize="10"/>
+                        <Slider ToolTip="Image Opacity" Width="100" VerticalAlignment="Center"
                             Minimum="0" Maximum="1" Value="{Binding Opacity, ElementName=mapImage}"/>
-                </StackPanel>
-                <CheckBox ToolTip="Seamarks Overlay" Margin="7" VerticalAlignment="Bottom" Content="Seamarks"
+                    </StackPanel>
+                    <CheckBox ToolTip="Seamarks Overlay" Margin="7" VerticalAlignment="Bottom" Content="Seamarks"
                           Checked="SeamarksChecked" Unchecked="SeamarksUnchecked"/>
-                <ComboBox ToolTip="Map Layer" Width="200" Margin="5" VerticalAlignment="Bottom"
+                    <ComboBox ToolTip="Map Layer" Width="200" Margin="5" VerticalAlignment="Bottom"
                           ItemsSource="{Binding MapLayers.MapLayerNames}"
                           SelectedItem="{Binding MapLayers.CurrentMapLayerName}"/>
-                <ComboBox x:Name="projectionComboBox" ToolTip="Map Projection" Width="120" Margin="5" VerticalAlignment="Bottom"
+                    <ComboBox x:Name="projectionComboBox" ToolTip="Map Projection" Width="120" Margin="5" VerticalAlignment="Bottom"
                           SelectedValuePath="Tag" SelectedIndex="0">
-                    <ComboBoxItem Content="Web Mercator" Tag="{StaticResource WebMercatorProjection}"/>
-                    <ComboBoxItem Content="World Mercator" Tag="{StaticResource WorldMercatorProjection}"/>
-                    <ComboBoxItem Content="Equirectangular" Tag="{StaticResource EquirectangularProjection}"/>
-                    <ComboBoxItem Content="Orthographic" Tag="{StaticResource OrthographicProjection}"/>
-                    <ComboBoxItem Content="Gnomonic" Tag="{StaticResource GnomonicProjection}"/>
-                    <ComboBoxItem Content="Stereographic" Tag="{StaticResource StereographicProjection}"/>
-                </ComboBox>
-            </StackPanel>
+                        <ComboBoxItem Content="Web Mercator" Tag="{StaticResource WebMercatorProjection}"/>
+                        <ComboBoxItem Content="World Mercator" Tag="{StaticResource WorldMercatorProjection}"/>
+                        <ComboBoxItem Content="Equirectangular" Tag="{StaticResource EquirectangularProjection}"/>
+                        <ComboBoxItem Content="Orthographic" Tag="{StaticResource OrthographicProjection}"/>
+                        <ComboBoxItem Content="Gnomonic" Tag="{StaticResource GnomonicProjection}"/>
+                        <ComboBoxItem Content="Stereographic" Tag="{StaticResource StereographicProjection}"/>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
         </Grid>
+
     </Grid>
 </Window>
