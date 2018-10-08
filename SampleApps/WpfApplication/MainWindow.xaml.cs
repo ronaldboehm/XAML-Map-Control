@@ -15,6 +15,8 @@ namespace WpfApplication
             //TileImageLoader.Cache = new MapControl.Caching.FileDbCache(TileImageLoader.DefaultCacheFolder);
 
             InitializeComponent();
+
+            SrtmElevationColors.Instance.Picker = elevationColorsPicker;
         }
 
         private void MapMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

@@ -1,12 +1,12 @@
 ﻿using MapControl;
+using Srtm.Colors;
 
 namespace SrtmMapLayer
 {
     public class MapLayer : MapTileLayer
     {
-
-        public MapLayer()
-            : base(new TileImageLoader())
+        public MapLayer(IElevationColors colors)
+            : base(new TileImageLoader(colors))
         {
             SourceName   = "SRTM Tiles";
             Description  = "SRTM Data";

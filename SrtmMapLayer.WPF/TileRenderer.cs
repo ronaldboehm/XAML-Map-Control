@@ -12,11 +12,16 @@ namespace SrtmMapLayer
         private readonly Renderer renderer;
 
         public TileRenderer() : 
-            this(mapTileWidth: 256, mapTileHeight: 256, colors: new ElevationColors(ElevationColors.DefaultGradient))
+            this(colors: new ElevationColors(ElevationColors.DefaultGradient))
         {
         }
 
-        public TileRenderer(int mapTileWidth, int mapTileHeight, ElevationColors colors)
+        public TileRenderer(IElevationColors colors) :
+            this(mapTileWidth: 256, mapTileHeight: 256, colors: colors)
+        {
+        }
+
+        public TileRenderer(int mapTileWidth, int mapTileHeight, IElevationColors colors)
         {
             this.renderer      = new Renderer(colors);
             this.mapTileWidth  = mapTileWidth;

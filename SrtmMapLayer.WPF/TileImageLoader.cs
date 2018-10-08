@@ -1,4 +1,5 @@
 ﻿using MapControl;
+using Srtm.Colors;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace SrtmMapLayer
     {
         private readonly ConcurrentStack<Tile> pendingTiles = new ConcurrentStack<Tile>();
         private readonly HeightMapProvider srtmTileProvider = new HeightMapProvider("E:\\Temp");
-        private readonly TileRenderer renderer = new TileRenderer();
 
-        public TileImageLoader()
+        private readonly TileRenderer renderer;
+
+        public TileImageLoader(IElevationColors colors)
         {
+            renderer = new TileRenderer(colors);
             var task = Task.Run(() => LoadTiles());
         }
 

@@ -21,7 +21,7 @@ namespace ViewModel
         {
             {
                 "Height map based on SRTM data",
-                new SrtmMapLayer.MapLayer()
+                new SrtmMapLayer.MapLayer(WpfApplication.SrtmElevationColors.Instance)
             },
             {
                 "OpenStreetMap",

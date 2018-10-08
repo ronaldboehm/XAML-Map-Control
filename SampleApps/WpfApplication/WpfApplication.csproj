@@ -50,6 +50,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SrtmElevationColors.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -92,6 +93,10 @@
     <ProjectReference Include="..\..\SrtmMapLayer.WPF\SrtmMapLayer.WPF.csproj">
       <Project>{32b60a41-7bd1-4626-84b0-367e64fda66c}</Project>
       <Name>SrtmMapLayer.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Srtm\Srtm.csproj">
+      <Project>{677d8e2e-2737-46fd-bca7-625e0b8b1b65}</Project>
+      <Name>Srtm</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

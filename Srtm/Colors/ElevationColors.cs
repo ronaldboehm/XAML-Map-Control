@@ -279,10 +279,10 @@ namespace Srtm.Colors
 
     public class CachedElevationColors : IElevationColors
     {
-        ElevationColors elevationColors;
+        IElevationColors elevationColors;
         Dictionary<int, Color> cache;
 
-        public CachedElevationColors(ElevationColors elevationColors)
+        public CachedElevationColors(IElevationColors elevationColors)
         {
             this.elevationColors = elevationColors;
             this.cache = new Dictionary<int, Color>();

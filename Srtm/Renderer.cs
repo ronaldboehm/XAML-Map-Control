@@ -13,9 +13,9 @@ namespace Srtm
         private const double dpi = 96;
         private readonly PixelFormat format = PixelFormats.Pbgra32;
 
-        public Renderer(ElevationColors colors)
+        public Renderer(IElevationColors colors)
         {
-            this.colors = new CachedElevationColors(colors);
+            this.colors = colors; // TODO new CachedElevationColors(colors);
 
         }
         public BitmapSource Render(HeightMap heightMap, RenderingInfo rendering)

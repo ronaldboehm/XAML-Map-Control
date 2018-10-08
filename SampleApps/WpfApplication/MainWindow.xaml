@@ -126,7 +126,7 @@
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
 
-        <srtm:ElevationColorsPicker Grid.Column="1" />
+        <srtm:ElevationColorsPicker Grid.Column="1" Name="elevationColorsPicker" />
         
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
