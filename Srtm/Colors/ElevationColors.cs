@@ -17,7 +17,7 @@ namespace Srtm.Colors
         public static readonly Gradient NaturalGradient = Gradient.GetNaturalGradient();
         public static readonly Gradient NaturalDarkGradient = Gradient.GetNaturalDarkGradient();
 
-        public static Gradient DefaultGradient => NaturalDarkGradient;
+        public static Gradient DefaultGradient => NaturalGradient;
 
         public class Gradient
         {
