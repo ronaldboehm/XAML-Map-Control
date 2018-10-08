@@ -27,7 +27,7 @@ These custom tiles are based on [SRTM 90m Digital Elevation Data](https://cgiarc
 
    ![Select a layer](img/Step6.png)
 
-7. Wait for a moment for the data to load
+7. Wait a moment for the data to load
 
    ![Isle of Skye with SRTM data](img/Step7.png)
 
